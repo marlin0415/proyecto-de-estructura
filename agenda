@@ -1,0 +1,106 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+struct Estudiante {
+    std::string nombre;
+    int codigo;
+    float nota;
+    Estudiante* siguiente;
+
+  
+    Estudiante(const std::string& nom, int cod, float n) 
+        : nombre(nom), codigo(cod), nota(n), siguiente(nullptr) {}
+};
+
+Estudiante* crearEstudiante(const std::string& nombre, int codigo, float nota) {
+    return new Estudiante(nombre, codigo, nota);
+}
+
+void insertarEstudiante(Estudiante*& cabeza, Estudiante* nuevoEstudiante) {
+    nuevoEstudiante->siguiente = cabeza;
+    cabeza = nuevoEstudiante;
+}
+
+void ordenarPorNota(Estudiante*& cabeza) {
+    if (cabeza == nullptr) return;
+
+    bool intercambiado;
+    do {
+        Estudiante* actual = cabeza;
+        intercambiado = false;
+        while (actual->siguiente != nullptr) {
+            if (actual->nota < actual->siguiente->nota) {
+                std::swap(actual->nombre, actual->siguiente->nombre);
+                std::swap(actual->codigo, actual->siguiente->codigo);
+                std::swap(actual->nota, actual->siguiente->nota);
+                intercambiado = true;
+            }
+            actual = actual->siguiente;
+        }
+    } while (intercambiado);
+}
+
+void ordenarPorNombre(Estudiante*& cabeza) {
+    if (cabeza == nullptr) return;
+
+    bool intercambiado;
+    do {
+        Estudiante* actual = cabeza;
+        intercambiado = false;
+        while (actual->siguiente != nullptr) {
+            if (actual->nombre > actual->siguiente->nombre) {
+                std::swap(actual->nombre, actual->siguiente->nombre);
+                std::swap(actual->codigo, actual->siguiente->codigo);
+                std::swap(actual->nota, actual->siguiente->nota);
+                intercambiado = true;
+            }
+            actual = actual->siguiente;
+        }
+    } while (intercambiado);
+}
+
+void imprimirLista(Estudiante* cabeza) {
+    Estudiante* actual = cabeza;
+    while (actual != nullptr) {
+        std::cout << "Nombre: " << actual->nombre 
+                  << ", Código: " << actual->codigo 
+                  << ", Nota: " << actual->nota << std::endl;
+        actual = actual->siguiente;
+    }
+}
+
+void mostrarNotaMayorYMenor(Estudiante* cabeza) {
+    if (cabeza == nullptr) {
+        std::cout << "La lista está vacía." << std::endl;
+        return;
+    }
+
+    float notaMayor = cabeza->nota;
+    float notaMenor = cabeza->nota;
+
+    Estudiante* actual = cabeza;
+    while (actual != nullptr) {
+        if (actual->nota > notaMayor) notaMayor = actual->nota;
+        if (actual->nota < notaMenor) notaMenor = actual->nota;
+        actual = actual->siguiente;
+    }
+
+    std::cout << "Nota mayor: " << notaMayor << std::endl;
+    std::cout << "Nota menor: " << notaMenor << std::endl;
+}
+
+int main() {
+    Estudiante* registroAcademico = nullptr; // Nuevo nombre
+
+    insertarEstudiante(registroAcademico, crearEstudiante("Juan Pérez", 101, 85.5));
+    insertarEstudiante(registroAcademico, crearEstudiante("Ana Gómez", 102, 92.0));
+    insertarEstudiante(registroAcademico, crearEstudiante("Luis Rodríguez", 103, 78.0));
+    insertarEstudiante(registroAcademico, crearEstudiante("María García", 104, 88.0));
+    insertarEstudiante(registroAcademico, crearEstudiante("Carlos Martínez", 105, 95.0));
+
+    std::cout << "Registro académico sin ordenar:" << std::endl;
+    imprimirLista(registroAcademico);
+
+    ordenarPorNota(registroAcademico);
+    std::cout << "\nRegistro académico orden
