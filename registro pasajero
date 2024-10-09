@@ -1,116 +1,123 @@
 #include <iostream>
- using namespace std;
 
+using namespace std;
 
-
-struct Pasajeros{
-
-    char nombre[20];
-    int Identificacion;
-    int destino; // la bocana, pianguita, ladrilleros
-    struct pasajeros*siguiente;
-
-
+struct Pasajero {
+    char nombre[10];
+    int numeroDocumento;
+    int destino;
+    Pasajero* siguiente;
 };
 
-pasajeros* cab,*aux,*aux2;
+Pasajero* cab = nullptr;
 
-void registrar()
+void registrar() {
+    Pasajero* aux = new Pasajero;
 
-aux = (struct pasajeros*) malloc (sizeof(Pasajeros));
-cout<<"Ingrese el nombre Pasajero: ";
-cin>>aux->nombre;
-cout<<"Ingrese la Indentificacion: ";
-cin>>aux->Identificacion;
-cout<<"Ingrese el Destino del Pasajero: ";
-cout<<'\t'<<"¿Que lugar desea visitar?"<<"Marque 1 si elije la bocana"<<'\t'<<"Marque 2 si elije pianguita"<<'\t'<<"Marque 3 si elije la ladrilleros"<<
-cin>>aux->destino;
-aux->siguiente = NULL;
+    cout << "Nombre: " << endl;
+    cin >> aux->nombre;
 
+    cout << "Numero de Documento: " << endl;
+    cin >> aux->numeroDocumento;
 
+   
+    cout << "Destino (1. La Bocana) (2. Piangüita) (3. Ladrilleros): " << endl;
+    while (true) {
+        cin >> aux->destino;
 
-(char nombre, int documento, int destino){
-
-
-
-    if (nuevopasajero!=NULL){
-    string (nuevopasajero->nombre);
-    nuevopasajero->numero_documento=numero_documento;
-    nuevopasajero->destino=destino;
-    nuevopasajero->sig=NULL;
-    
-    
-    }
-
-
-
-
-    }
-
-if (!cab)
-    {
-        cab = aux;
-    }else{
-
-        aux2 = cab;
-        while (aux2->siguiente != NULL)
-        {
-            aux2 = aux2->siguiente;
-        }
-
-        aux2->siguiente = aux;
-        aux = aux2 = NULL;
-        free(aux);free(aux2);      
         
-    }
-
-
-
-void mostrar()
-{
-    aux = cab;
-    int item = 0;
-    if(cab != NULL)
-    {
-        cout<<"item"<<'\t'<<"Identificacion"<<'\t'<<"Nombre"<<'\t'<<"Destino"<<endl;
-        while (aux != NULL)
-        {
-            item++;
-            cout<<item<<'\t';
-            cout<<aux->Identificacion<<'\t'<<'\t';
-            cout<<aux->nombre<<'\t';
-            cout<<aux->destino<<endl;
-            auxiliar = aux->siguiente;
+        if (cin.fail()) {
+            cin.clear(); 
+            cin.ignore(10000, '\n'); 
+            cout << "Entrada inválida. Por favor, ingrese un numero: " << endl;
+        } else {
+            cin.ignore(10000, '\n'); 
+            break; 
         }
-        aux = NULL; free(aux);
     }
 
+    aux->siguiente = cab; 
+    cab = aux;
 }
 
-void ordenar(){}
+void mostrar() {
+    Pasajero* aux = cab;
+    int item = 0;
 
-int main()
-{
+    if (cab != nullptr) {
+        cout << "Item\tNumero de Documento\tNombre\tDestino\n";
+
+        while (aux != nullptr) {
+            item++;
+            cout << item << "\t" << aux->numeroDocumento << "\t" << aux->nombre << "\t" << aux->destino << endl;
+            aux = aux->siguiente;
+        }
+    } else {
+        cout << "No hay pasajeros registrados.\n";
+    }
+}
+
+void ordenar() {
+    if (cab == nullptr) {
+        return;
+    }
+
+    int swapped;
+    Pasajero* ptr1;
+    Pasajero* lptr = nullptr;
+
+    do {
+        swapped = 0;
+        ptr1 = cab;
+
+        while (ptr1->siguiente != lptr) {
+            if (ptr1->destino > ptr1->siguiente->destino ||
+                (ptr1->destino == ptr1->siguiente->destino && ptr1->numeroDocumento > ptr1->siguiente->numeroDocumento)) {
+                
+                Pasajero temp = *ptr1;
+                *ptr1 = *(ptr1->siguiente);
+                *(ptr1->siguiente) = temp;
+                swapped = 1;
+            }
+            ptr1 = ptr1->siguiente;
+        }
+        lptr = ptr1;
+    } while (swapped);
+}
+
+int main() {
     int opcion;
-    do
-    {
-        cout<<'\t'<<"MENU"<<endl;
-        cout<<"1. Ingresar Pasajero"<<'\n'<<"2. Mostrar lsita de  Pasajeros"<<'\n'<<"3. Ordenar lista de Pasajeros"<<endl;
-        cout<<"0. salir"<<endl;
-        cin>>opcion;
 
-        switch (opcion)
-        {
-        case 1:{registrar();}
-            break;
-        
-        case 2:{mostrar();}
-            break;
+    do {
+        cout << "\tMENU\n";
+        cout << "1. Ingresar Pasajero\n";
+        cout << "2. Mostrar lista de Pasajeros\n";
+        cout << "3. Ordenar lista de Pasajeros\n";
+        cout << "0. Salir\n";
+        cin >> opcion;
 
-        case 3:{ordenar();}
-            break;
+        while (cin.fail()) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Entrada inválida. Por favor, ingrese un número: " << endl;
+            cin >> opcion;
         }
 
+        switch (opcion) {
+            case 1: registrar(); break;
+            case 2: mostrar(); break;
+            case 3: ordenar(); break;
+            case 0: break;
+            default: cout << "Opción no válida. Intente de nuevo.\n";
+        }
     } while (opcion != 0);
-        
+
+    Pasajero* actual = cab;
+    while (actual != nullptr) {
+        Pasajero* temp = actual;
+        actual = actual->siguiente;
+        delete temp; 
+    }
+
+    return 0;
 }
