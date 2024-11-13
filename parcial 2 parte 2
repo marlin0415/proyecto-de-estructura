@@ -1,0 +1,239 @@
+#include<iostream>
+#include<malloc.h>
+using namespace std;
+
+struct paciente
+{
+    int documento, edad = 0;
+    char nombre[5];
+    paciente *izq =NULL;
+paciente*der = NULL;
+};
+
+paciente *raiz, *aux, *padre;
+
+int posicionar(paciente *p , paciente *s)
+{
+    if (s->edad < p->edad)
+    {
+        if(p->izq == NULL)
+        {
+            p->izq = s;
+            return 0;
+        }
+        else
+        {
+            posicionar(p->izq,s);
+        }
+    }
+    else
+    {
+        if (p->der == NULL)
+        {
+            P->der = s;
+            return 0;
+        }
+        else
+        {
+            posicionar(p->der,s);
+        }
+        
+    }
+    return 0;    
+}
+
+void registrar()
+{
+    paciente *nodo = ((struct paciente *) malloc (sizeof(struct paciente)));
+    nodo->izq = nodo->der = NULL;
+
+    cout<<"ingrese el nombre del paciente: ";
+    cin>>nodo->nombre;
+    cout<<"ingrese el Documento del paciente: ";
+    cin>>nodo->nuip;
+    cout<<"ingrese la edad del paciente: ";
+    cin>>nodo->edad;
+
+    if(!raiz)
+    {
+        raiz = nodo;
+        nodo = NULL;
+        free(nodo);
+    }else
+    {
+        posicionar(raiz,nodo);
+    }
+}
+
+void mostrarP(paciente *r)
+{        
+    if(p->der != NULL)
+    {
+        mostrarP(p->der);
+    }
+    cout<<r->nombre<<'\t'<<p->documento<<'\t'<<p->edad<<endl;   
+
+    if(p->izq != NULL)
+    {
+        mostrarP(p->izq);
+    }
+}
+
+void mostrar()
+{
+    if(!raiz)
+    {
+        cout<<"los pacientes no estan registrados"<<endl;
+    }
+    else
+    {
+        cout<<"Nombre"<<'\t'<<"DOCUMENTO"<<'\t'<<"edad"<<endl;mostrarP(raiz);
+    }
+}
+
+int buscarPaciente(paciente *s, int dato)
+{
+    
+    if(s->documento == dato)
+    {
+        aux = s;
+        return 0;
+    }else
+    {
+        if(s->izq != NULL)
+        {
+            buscarPaciente(s->izq,dato);            
+        }
+        if(s->der != NULL)
+        {
+            buscarPaciente(s->der,dato);
+        }
+    }
+    return 0;
+}
+
+void buscar()
+{
+    if(raiz)
+    {
+        cout<<"ingrese el documento del paciente: ";
+        int documento;
+        cin>>documento;
+        buscarPaciente(raiz, documento);
+        if(aux)
+        {
+            cout<<"nombre: "<<aux->nombre<<'\n'<<"DOCUMENTO: "<<aux->DOCUMENTO<<'\n'<<"Edad: "<<aux->edad<<endl;
+        }else
+        {
+            cout<<"el paciente no existe en nuestra base de datos"<<endl;
+        }
+    }else
+    {
+        cout<<"no hay pacientes registrados"<<endl;
+    }  
+}
+
+int buscarHijos()
+{
+    if((aux->der == NULL) && (aux->izq == NULL))
+    {
+        return 0;
+    }else
+    {
+        if((aux->der == NULL) || (aux->izq == NULL))
+        {
+            return 1;
+        }else
+        {
+            return 2;
+        }
+    }
+}
+
+void buscarPadre(paciente *p)
+{
+    padre = NULL;
+    if(p == aux)
+    {
+        padre = NULL;
+    }else
+    {
+        if((p->der == aux) || (p->izq == aux))
+        {
+            padre = p;
+        }else
+        {
+            if(p->izq != NULL)
+            {
+                buscarPadre(p->izq);
+            }
+
+            if(p->der != NULL)
+            {
+                buscarPadre(p->der);
+            }
+        }        
+    }
+}
+
+void eliminarPaciente()
+{
+    buscar();
+    int hijos = buscarHijos();
+    buscarPadre(raiz);
+    if(!((aux == NULL) || (padre == NULL)))
+    {   
+        if(hijos == 0)
+        {
+            if(padre->der == aux)
+            {
+                padre->der = NULL;
+            }else
+            {
+                padre->izq = NULL;
+            }
+        }
+        aux = NULL; free(aux);
+    }
+}
+
+int main()
+{
+    int opcion = 0;
+    do
+    {
+        cout<<'\t'<<"MENU"<<endl;
+        cout<<"1. registrar pacientes"<<endl;
+        cout<<"2. mostrar pacientes"<<endl;
+        cout<<"3. buscar pacientes"<<endl;
+        cout<<"4. eliminar pacientes"<<endl;
+        cout<<"0. salir"<<endl;
+        cin>>opcion;
+
+        switch (opcion)
+        {
+            case 0:
+                {cout<<'\t'<<"hasta luego"<<endl; return 0;}
+                break;
+
+            case 1:
+                {registrar();}
+                break;
+
+            case 2:
+                {mostrar();}
+                break;
+
+            case 3:
+                {buscar();}
+                break;
+
+            case 4:
+                {eliminarPaciente();}
+                break;
+
+            default:
+                break;
+        } 
+   } while (opcion != 0);
+}
