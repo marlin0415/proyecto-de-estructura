@@ -1,1 +1,117 @@
+include "iostream"
 
+using namespace std;
+
+struct paciente {
+    int documento;
+    int edad;
+    paciente *der;
+    paciente *izq;
+};
+
+struct paciente *raiz, *aux, *aux2, *padre;
+
+int posicionar(){    
+    if(aux->documento < aux2->documento){        
+        if(aux2->der==NULL){
+            aux2->der = aux;            
+            return 0;
+        }
+        else {
+            aux2 = aux2->der;
+            posicionar();
+        }
+    }
+    else {
+        if(aux2->izq==NULL){
+            aux2->izq = aux;            
+            return 0;
+        } else {
+            aux2 = aux2->izq;
+            posicionar();
+        }
+    }
+}
+
+
+
+int registrar(){
+    aux = ((struct paciente *) malloc (sizeof(struct paciente)));
+    cout<<"ingrese identificación: ";
+    cin>>aux->documento;
+    aux->der = aux->izq = NULL;
+    if(!raiz){
+        raiz = aux;
+        aux = NULL;
+        free(aux);
+    }
+    else {        
+        aux2 = raiz;
+        posicionar();
+        aux = NULL;
+        free(aux);
+    }
+    return 0;
+
+}
+
+int recorrer(paciente *a) {
+    cout<<"documento: "<<a->documento<<endl;    
+    if(a->der!=NULL){
+        recorrer(a->der);
+    }
+    if(a->izq!=NULL){
+        recorrer(a->izq);
+    }
+    return 0;
+}
+
+int mostrar(){
+    if(raiz){        
+        recorrer(raiz);
+    }
+}
+
+int ubicar(paciente *a, int aguja){
+    if(a->edad==aguja){
+        aux2 = a;
+        return 0;
+    } else {
+        if(a->izq!=NULL){
+            ubicar(a->izq, aguja);
+        }
+       
+        if(a->der!=NULL){
+            ubicar(a->der, aguja);
+        }        
+    }
+    return 0;
+}
+
+int buscar(int aguja){
+    aux = NULL;
+    if(raiz!=NULL){
+        aux = raiz;
+        ubicar(aux, aguja);
+    }
+}
+
+int main(){
+    int opcion;
+    do {
+        cout<<"Menu"<<endl<<"1. Insertar Contacto"<<endl<<"2. Mostrar Contactos"<<endl<<"3.incertar edad"<<endl"4. Mostrar edad"<<endl<<"5. Ordenar"<<endl;
+        cin>>opcion;
+        switch (opcion)
+        {
+        case 1:
+            registrar();
+        break;
+        case 2:
+            mostrar();
+        break;
+        case 3:
+            ordenar();
+        break;
+        }
+    }while(opcion!=0);
+}return 0;
